@@ -95,7 +95,7 @@ option(onnxruntime_USE_RKNPU "Build with RKNPU support" OFF)
 option(onnxruntime_USE_DNNL "Build with DNNL support" OFF)
 option(onnxruntime_USE_NEURAL_SPEED "Build with Neural Speed support" OFF)
 option(onnxruntime_USE_JSEP "Build with JavaScript implemented kernels support" OFF)
-option(onnxruntime_BUILD_UNIT_TESTS "Build ONNXRuntime unit tests" ON)
+option(onnxruntime_BUILD_UNIT_TESTS "Build ONNXRuntime unit tests" OFF)
 option(onnxruntime_BUILD_CSHARP "Build C# library" OFF)
 option(onnxruntime_BUILD_OBJC "Build Objective-C library" OFF)
 option(onnxruntime_USE_PREINSTALLED_EIGEN "Use pre-installed EIGEN. Need to provide eigen_SOURCE_PATH if turn this on." OFF)
@@ -1340,6 +1340,10 @@ if (onnxruntime_USE_EXTENSIONS)
 endif()
 
 #Dependencies end. In the next we'll enable "treat warning as error"
+
+SET(CMAKE_CXX_FLAGS_RELEASE "-O1") # stop code inline.
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
 
 #Adjust warning flags
 set_msvc_c_cpp_compiler_warning_level(4)

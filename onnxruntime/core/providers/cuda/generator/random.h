@@ -49,6 +49,9 @@ class RandomBase {
 };
 
 class RandomNormalBase : public RandomBase {
+ public:
+  using RandomBase::Compute;
+
  protected:
   RandomNormalBase(const OpKernelInfo& info) : RandomBase(info) {
     ORT_THROW_IF_ERROR(info.GetAttr<float>("scale", &scale_));
@@ -86,6 +89,9 @@ class RandomNormalLike final : public CudaKernel, protected RandomNormalBase {
 };
 
 class RandomUniformBase : public RandomBase {
+ public:
+  using RandomBase::Compute;
+
  protected:
   explicit RandomUniformBase(const OpKernelInfo& info) : RandomBase(info) {
     float low, high;

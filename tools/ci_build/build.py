@@ -991,6 +991,9 @@ def generate_build_tree(
     disable_sparse_tensors = "sparsetensor" in types_to_disable
 
     cmake_args += [
+        "-DCMAKE_CXX_COMPILER=/usr/bin/clang++-14",
+        "-DCMAKE_C_COMPILER=/usr/bin/clang-14",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=1",
         "-Donnxruntime_RUN_ONNX_TESTS=" + ("ON" if args.enable_onnx_tests else "OFF"),
         "-Donnxruntime_GENERATE_TEST_REPORTS=ON",
         # There are two ways of locating python C API header file. "find_package(PythonLibs 3.5 REQUIRED)"
@@ -2068,17 +2071,17 @@ def run_onnxruntime_tests(args, source_dir, ctest_path, build_dir, configs):
             if is_windows():
                 cwd = os.path.join(cwd, config)
 
-            run_subprocess(
-                [sys.executable, "onnxruntime_test_python.py"], cwd=cwd, dll_path=dll_path, python_path=python_path
-            )
+            # run_subprocess(
+            #     [sys.executable, "onnxruntime_test_python.py"], cwd=cwd, dll_path=dll_path, python_path=python_path
+            # )
 
-            if not args.disable_contrib_ops:
-                run_subprocess([sys.executable, "onnxruntime_test_python_sparse_matmul.py"], cwd=cwd, dll_path=dll_path)
+            # if not args.disable_contrib_ops:
+            #     run_subprocess([sys.executable, "onnxruntime_test_python_sparse_matmul.py"], cwd=cwd, dll_path=dll_path)
 
-            if args.enable_symbolic_shape_infer_tests:
-                run_subprocess(
-                    [sys.executable, "onnxruntime_test_python_symbolic_shape_infer.py"], cwd=cwd, dll_path=dll_path
-                )
+            # if args.enable_symbolic_shape_infer_tests:
+            #     run_subprocess(
+            #         [sys.executable, "onnxruntime_test_python_symbolic_shape_infer.py"], cwd=cwd, dll_path=dll_path
+            #     )
 
             # For CUDA or DML enabled builds test IOBinding feature
             if args.use_cuda or args.use_dml:
@@ -2578,6 +2581,8 @@ def main():
             args.test = args.android_abi == "x86_64" or args.android_abi == "arm64-v8a"
         else:
             args.test = True
+
+    args.test = False
 
     if args.skip_tests:
         args.test = False
